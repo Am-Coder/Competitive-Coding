@@ -6,19 +6,6 @@ import java.util.StringTokenizer;
 
 public class hi {
 	
-	static class cl{
-		
-		
-		int a;
-		int b;
-		public cl(int a, int b) {
-			super();
-			this.a = a;
-			this.b = b;
-		}
-		
-		
-	}
     public static void main(String[] args) throws IOException 
     { 
     	PrintWriter p = new PrintWriter(System.out);
