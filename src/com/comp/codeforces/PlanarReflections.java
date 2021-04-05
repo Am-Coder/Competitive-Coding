@@ -20,23 +20,75 @@ public class PlanarReflections {
 		while (t-- > 0) {
 			int n = s.nextInt();
 			int k = s.nextInt();
-			long[][] dp = new long[k + 1][n + 1];
-			Arrays.fill(dp[1], 1);
-			for (int ss = 1; ss <= k; ss++) {
-				dp[ss][0] = 1;
-			}
-			for (int ss = 2; ss <= k; ss++) {
-				for (int j = 1; j <= n; j++) {
-					dp[ss][j] = dp[ss][j - 1] + dp[ss - 1][n - j];
-					dp[ss][j] %= MOD;
+			
+			//			----------------------------------------------------------------
+			//			long[][] dp = new long[k + 1][n + 1];
+			//			Arrays.fill(dp[1], 1);
+			//			for (int ss = 1; ss <= k; ss++) {
+			//				dp[ss][0] = 1;
+			//			}
+			//			for (int ss = 2; ss <= k; ss++) {
+			//				for (int j = 1; j <= n; j++) {
+			//					dp[ss][j] = dp[ss][j - 1] + dp[ss - 1][n - j];
+			//					dp[ss][j] %= MOD;
+			//				}
+			//			}
+			//			p.println(dp[k][n]);
+			//			----------------------------------------------------------------
+			
+			dp = new long[n + 1][k + 1][2];
+			for (int i = 0; i <= n; i++) {
+				for (int j = 0; j <= k; j++) {
+					for (int l = 0; l < 2; l++) {
+						dp[i][j][l] = -1;
+					}
 				}
 			}
-			p.println(dp[k][n]);
+			
+			// To prevent stack overflow **
+			for (int tt = 1; tt <= k; tt++) {
+				mcm(n, 1, tt, 1);
+			}
+			p.println(mcm(n, 1, k, 1));
 		}
 		
 		p.close();
 	}
+	
+	static long[][][] dp;
+	
+	public static long mcm(int n, int ind, int k, int dir) {
 		
+		if (k == 1) {
+			return 1;
+		}
+		
+		if (dp[ind][k][dir] != -1)
+			return dp[ind][k][dir];
+		
+		long cou = 2;
+		if (dir == 1) {
+			if (ind < n) {
+				cou += mcm(n, ind + 1, k, dir) - 1;
+			}
+			cou %= MOD;
+			if (ind > 1)
+				cou += mcm(n, ind - 1, k - 1, 1 - dir) - 1;
+			cou %= MOD;
+			dp[ind][k][dir] = cou;
+		} else {
+			if (ind > 1)
+				cou += mcm(n, ind - 1, k, dir) - 1;
+			cou %= MOD;
+			if (ind < n)
+				cou += mcm(n, ind + 1, k - 1, 1 - dir) - 1;
+			cou %= MOD;
+			dp[ind][k][dir] = cou;
+		}
+		
+		return cou;
+	}
+	
 	static class Print {
 		
 		private BufferedWriter bw;
